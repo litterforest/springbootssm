@@ -7,6 +7,11 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor;
 
+/**
+ * 防止csrf攻击的过滤器
+ * @author Administrator
+ *
+ */
 @Configuration
 public class WebSecurityFilterConfig {
 	
