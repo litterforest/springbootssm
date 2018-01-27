@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cobee.demo.dao.SecureUserMapper">
+	
+	<select id="list" resultType="SecureUser" >
+	
+		select 
+			a.id,
+			a.create_Date,
+			a.create_By,
+			a.update_Date,
+			a.update_By,
+			a.remarks,
+			a.username,
+			a.password,
+			a.mobile,
+			a.del_flag,
+			a.realname,
+			a.is_admin,
+			a.user_type
+		from secure_user a 
+		where a.del_flag = 0
+		
+		<if test="username != null and username != ''" >
+			and a.username like concat('%', #{username}, '%')
+		</if>
+		
+		<if test="realname != null and realname != ''" >
+			and a.realname like concat('%', #{realname}, '%')
+		</if>
+		
+		<if test="mobile != null and mobile != ''" >
+			and a.mobile = #{mobile}
+		</if>
+	
+	</select>
+	
+	<select id="get" resultType="SecureUser" parameterType="integer" >
+	
+		select 
+			a.id,
+			a.create_Date,
+			a.create_By,
+			a.update_Date,
+			a.update_By,
+			a.remarks,
+			a.username,
+			a.password,
+			a.mobile,
+			a.del_flag,
+			a.realname,
+			a.is_admin,
+			a.user_type
+		from secure_user a where a.id = #{id}
+		
+	</select>
+	
+	<update id="delete" parameterType="integer" >
+	
+		delete from secure_user where id = #{id}
+		
+	</update>
+	
+	<update id="deleteByLogic" parameterType="integer" >
+	
+		update secure_user set del_flag = 1 where id = #{id} 
+		
+	</update>
+	
+	<update id="insertBySelective" parameterType="SecureUser">
+		<selectKey order="AFTER" keyProperty="id" resultType="integer" keyColumn="id" >
+			select last_insert_id()
+		</selectKey>
+		insert into secure_user
+		(
+			<trim suffixOverrides=",">
+				<if test="createDate != null">
+					create_date,
+				</if>
+				<if test="createBy != null">
+					create_by,
+				</if>
+				<if test="updateDate != null">
+					update_date,
+				</if>
+				<if test="updateBy != null">
+					update_by,
+				</if>
+				<if test="remarks != null">
+					remarks,
+				</if>
+				<if test="username != null">
+					username,
+				</if>
+				<if test="password != null and password != ''">
+					password,
+				</if>
+				<if test="mobile != null">
+					mobile,
+				</if>
+				<if test="realname != null">
+					realname,
+				</if>
+				<if test="isAdmin != null">
+					is_admin,
+				</if>
+				
+			</trim>
+		) values (
+			<trim suffixOverrides=",">
+				<if test="createDate != null">
+					#{createDate},
+				</if>
+				<if test="createBy != null">
+					#{createBy},
+				</if>
+				<if test="updateDate != null">
+					#{updateDate},
+				</if>
+				<if test="updateBy != null">
+					#{updateBy},
+				</if>
+				<if test="remarks != null">
+					#{remarks},
+				</if>
+				<if test="username != null">
+					#{username},
+				</if>
+				<if test="password != null and password != ''">
+					#{password},
+				</if>
+				<if test="mobile != null">
+					#{mobile},
+				</if>
+				<if test="realname != null">
+					#{realname},
+				</if>
+				<if test="isAdmin != null">
+					#{isAdmin},
+				</if>
+			</trim>
+		)
+	
+	</update>
+	
+	<update id="updateBySelective" parameterType="SecureUser">
+		
+		update secure_user set 
+		
+		<trim suffixOverrides=",">
+				<if test="createDate != null">
+					create_date = #{createDate},
+				</if>
+				<if test="createBy != null">
+					create_by = #{createBy},
+				</if>
+				<if test="updateDate != null">
+					update_date = #{updateDate},
+				</if>
+				<if test="updateBy != null">
+					update_by = #{updateBy},
+				</if>
+				<if test="remarks != null">
+					remarks = #{remarks},
+				</if>
+				<if test="username != null">
+					username = #{username},
+				</if>
+				<if test="password != null and password != ''">
+					password = #{password},
+				</if>
+				<if test="mobile != null">
+					mobile = #{mobile},
+				</if>
+				<if test="realname != null">
+					realname = #{realname},
+				</if>
+				<if test="isAdmin != null">
+					is_admin = #{isAdmin},
+				</if>
+			</trim>
+		
+		where id = #{id}
+	
+	</update>
+	
+	
+</mapper>
