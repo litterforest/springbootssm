@@ -1,8 +1,8 @@
 package com.cobee.demo.config;
 
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor;
@@ -12,8 +12,8 @@ import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValu
  * @author Administrator
  *
  */
-@Configuration
-public class WebSecurityFilterConfig {
+@SpringBootConfiguration
+public class WebSecurityFilterConfiguration {
 	
 	@Bean("csrfFilter")
     public FilterRegistrationBean createFilter() {
