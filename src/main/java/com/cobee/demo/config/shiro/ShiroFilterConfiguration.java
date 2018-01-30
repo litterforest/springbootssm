@@ -1,14 +1,19 @@
 package com.cobee.demo.config.shiro;
 
+import javax.servlet.Filter;
+
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,6 +27,8 @@ import com.cobee.demo.component.shiro.ShiroRealm;
 //@Configuration
 @SpringBootConfiguration
 public class ShiroFilterConfiguration {
+	
+	private Logger logger = LoggerFactory.getLogger(ShiroFilterConfiguration.class);
 	
 	@Bean("cacheManager")
 	public EhCacheManager createEhCacheManager()
@@ -74,8 +81,9 @@ public class ShiroFilterConfiguration {
 	}
 	
 	@Bean("shiroFilter")
-	public ShiroFilterFactoryBean createShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager securityManager)
+	public FilterRegistrationBean createShiroFilter(@Qualifier("securityManager") DefaultWebSecurityManager securityManager)
 	{
+		
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		shiroFilterFactoryBean.setLoginUrl("/login");
@@ -84,7 +92,25 @@ public class ShiroFilterConfiguration {
 		StringBuilder chainDefinitions = new StringBuilder();
 //		chainDefinitions.append("/** = authc");
 		shiroFilterFactoryBean.setFilterChainDefinitions(chainDefinitions.toString());
-		return shiroFilterFactoryBean;
+		
+		FilterRegistrationBean registration = new FilterRegistrationBean();
+		//注入过滤器
+        try {
+			registration.setFilter((Filter) shiroFilterFactoryBean.getObject());
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+        //拦截规则
+        registration.addUrlPatterns("/*");
+        //过滤器名称
+        registration.setName("shiroFilter");
+        //是否自动注册 false 取消Filter的自动注册
+//        registration.setEnabled(false);
+        //过滤器顺序
+        registration.setOrder(1);
+		return registration;
 	}
+	
+	
 	
 }
