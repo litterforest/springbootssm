@@ -2,6 +2,7 @@ package com.cobee.demo;
 
 import java.util.List;
 
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class SpringBootTestApplicationTests {
 
 	@Autowired
 	private SecureUserMapper secureUserMapper;
+	@Autowired
+	private EhCacheManager ehCacheManager;
 	
 	@Test
 	public void contextLoads() {
@@ -36,6 +39,12 @@ public class SpringBootTestApplicationTests {
 				System.out.println(user);
 			}
 		}
+	}
+	
+	@Test
+	public void test2()
+	{
+		System.out.println(ehCacheManager);
 	}
 	
 }

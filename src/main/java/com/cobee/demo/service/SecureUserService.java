@@ -21,6 +21,11 @@ public class SecureUserService {
 		return secureUserMapper.list(secureUserQuery);
 	}
 	
+	public List<SecureUser> list(SecureUser obj)
+	{
+		return secureUserMapper.list(obj);
+	}
+	
 	@Transactional(readOnly = false)
 	public Integer deleteByLogic(Integer id)
 	{
