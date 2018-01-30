@@ -31,8 +31,6 @@ import com.cobee.demo.component.shiro.ShiroRealm;
 @SpringBootConfiguration
 public class ShiroFilterConfiguration {
 	
-	private Logger logger = LoggerFactory.getLogger(ShiroFilterConfiguration.class);
-	
 	@Bean("cacheManager")
 	public EhCacheManager createEhCacheManager()
 	{
@@ -103,7 +101,8 @@ public class ShiroFilterConfiguration {
 		shiroFilterFactoryBean.setSuccessUrl("/home");
 		shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
 		StringBuilder chainDefinitions = new StringBuilder();
-//		chainDefinitions.append("/** = authc");
+		chainDefinitions.append("/SecureUser/list = anon");
+		chainDefinitions.append(System.getProperty("line.separator")).append("/** = authc");
 		shiroFilterFactoryBean.setFilterChainDefinitions(chainDefinitions.toString());
 		
 		FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -111,7 +110,7 @@ public class ShiroFilterConfiguration {
         try {
 			registration.setFilter((Filter) shiroFilterFactoryBean.getObject());
 		} catch (Exception e) {
-			logger.error("", e);
+			throw new RuntimeException(e);
 		}
         //拦截规则
         registration.addUrlPatterns("/*");
