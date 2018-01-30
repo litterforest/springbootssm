@@ -4,10 +4,13 @@ import javax.servlet.Filter;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -55,6 +58,16 @@ public class ShiroFilterConfiguration {
 		DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
 		defaultWebSecurityManager.setCacheManager(cacheManager);
 		defaultWebSecurityManager.setRealm(shiroRealm);
+		RememberMeManager rememberMeManager = defaultWebSecurityManager.getRememberMeManager();
+		if (rememberMeManager != null && rememberMeManager instanceof CookieRememberMeManager)
+		{
+			CookieRememberMeManager cookieRememberMeManager = (CookieRememberMeManager)rememberMeManager;
+			Cookie cookie = cookieRememberMeManager.getCookie();
+			if (cookie != null)
+			{
+				cookie.setMaxAge(604800);
+			}
+		}
 		return defaultWebSecurityManager;
 	}
 	
